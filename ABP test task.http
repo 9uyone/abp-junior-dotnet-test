@@ -1,0 +1,6 @@
+@ABP_test_task_HostAddress = http://localhost:5192
+
+GET {{ABP_test_task_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
