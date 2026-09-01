@@ -1,5 +1,6 @@
 using ABP_test_task.Data;
 using ABP_test_task.Middleware;
+using ABP_test_task.Services.Pricing;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,12 +15,15 @@ builder.Services
 		options.UseSnakeCaseNamingConvention();
 	});
 
-/*sing (var scope = app.Services.CreateScope()) {
-	var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-	await DataSeeder.SeedAsync(dbContext);
-}*/
+builder.Services
+	.AddSingleton<IRentalPriceCalculator, RentalPriceCalculator>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope()) {
+	var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+	await DataSeeder.SeedAsync(dbContext);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {

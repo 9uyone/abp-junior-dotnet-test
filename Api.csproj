@@ -24,7 +24,6 @@
     <Folder Include="DTOs\Halls\" />
     <Folder Include="DTOs\Booking\" />
     <Folder Include="DTOs\Reports\" />
-    <Folder Include="Endpoints\" />
   </ItemGroup>
 
 </Project>
