@@ -46,7 +46,7 @@ public class HallService(AppDbContext context, IBookingTimePolicy bookingTimePol
 
 	public async Task<bool> UpdateHallAsync(int id, UpdateHallRequest request, CancellationToken cancellationToken) {
 		var hall = await context.Halls
-			.Include(h => h.HallServices)
+			.AsNoTracking()
 			.FirstOrDefaultAsync(h => h.Id == id, cancellationToken);
 
 		if (hall is null)
@@ -58,23 +58,29 @@ public class HallService(AppDbContext context, IBookingTimePolicy bookingTimePol
 		hall.Capacity = request.Capacity;
 		hall.BasePricePerHour = request.BasePricePerHour;
 
-		var incomingServices = request.Services.ToDictionary(service => service.ServiceId);
-		var existingServices = hall.HallServices.ToDictionary(service => service.ServiceId);
+		var incomingServiceIds = request.Services.Select(s => s.ServiceId).ToHashSet();
+		var existingHallServices = await context.HallServices
+			.Where(hs => hs.HallId == id)
+			.ToListAsync(cancellationToken);
+
+		var existingServiceIds = existingHallServices.ToDictionary(hs => hs.ServiceId);
 
 		foreach (var service in request.Services) {
-			if (existingServices.TryGetValue(service.ServiceId, out var hallService)) {
+			if (existingServiceIds.TryGetValue(service.ServiceId, out var hallService)) {
 				hallService.Price = service.Price;
+				context.HallServices.Update(hallService);
 				continue;
 			}
 
-			hall.HallServices.Add(new HallServiceEntity {
+			context.HallServices.Add(new HallServiceEntity {
+				HallId = id,
 				ServiceId = service.ServiceId,
 				Price = service.Price
 			});
 		}
 
-		foreach (var hallService in hall.HallServices.Where(service => !incomingServices.ContainsKey(service.ServiceId)).ToList())
-			context.Remove(hallService);
+		foreach (var hallService in existingHallServices.Where(hs => !incomingServiceIds.Contains(hs.ServiceId)))
+			context.HallServices.Remove(hallService);
 
 		await context.SaveChangesAsync(cancellationToken);
 		return true;

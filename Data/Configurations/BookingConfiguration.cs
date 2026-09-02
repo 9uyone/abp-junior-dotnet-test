@@ -11,15 +11,6 @@ internal class BookingConfiguration : IEntityTypeConfiguration<Booking> {
 			.HasForeignKey(b => b.HallId)
 			.OnDelete(DeleteBehavior.Restrict);
 
-		builder.Property(b => b.CustomerName)
-			.IsRequired()
-			.HasMaxLength(100);
-
-		builder.Property(b => b.CustomerPhone)
-			.IsRequired()
-			.HasMaxLength(20)
-			.IsUnicode(false);
-
 		builder.Property(b => b.StartTime)
 			.IsRequired();
 

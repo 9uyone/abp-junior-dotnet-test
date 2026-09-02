@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\Booking\" />
     <Folder Include="DTOs\Reports\" />
   </ItemGroup>
 
