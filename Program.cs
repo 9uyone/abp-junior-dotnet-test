@@ -1,6 +1,13 @@
 using ABP_test_task.Data;
+using ABP_test_task.DTOs.Halls;
+using ABP_test_task.Endpoints;
 using ABP_test_task.Middleware;
+using ABP_test_task.Services.Analytics;
+using ABP_test_task.Services.Booking;
+using ABP_test_task.Services.Hall;
 using ABP_test_task.Services.Pricing;
+using ABP_test_task.Validators.Halls;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +23,16 @@ builder.Services
 	});
 
 builder.Services
-	.AddSingleton<IRentalPriceCalculator, RentalPriceCalculator>();
+	.AddSingleton<IRentalPriceCalculator, RentalPriceCalculator>()
+	.AddSingleton<IBookingTimePolicy, BookingTimePolicy>()
+	.AddScoped<IHallService, HallService>();
+//.AddScoped<IBookingService, BookingService>();
+//.AddScoped<IReportsService, ReportsService>();
+
+builder.Services
+	.AddScoped<IValidator<CreateHallRequest>, CreateHallRequestValidator>()
+	.AddScoped<IValidator<UpdateHallRequest>, UpdateHallRequestValidator>()
+	.AddScoped<IValidator<FindAvailableHallsQuery>, FindAvailableHallsQueryValidator>();
 
 var app = builder.Build();
 
@@ -34,5 +50,8 @@ if (app.Environment.IsDevelopment()) {
 //app.UseHttpsRedirection();
 app.UseExceptionHandler();
 
+app.MapGroup("/api/halls")
+   .MapHallEndpoints()
+   .WithTags("Conference halls");
 
 app.Run();
