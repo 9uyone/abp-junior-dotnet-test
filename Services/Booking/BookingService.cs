@@ -1,9 +1,8 @@
 ﻿using ABP_test_task.Data;
 using ABP_test_task.DTOs.Bookings;
-using ABP_test_task.Entities;
 using ABP_test_task.Services.Pricing;
-using BookingServiceEntity = ABP_test_task.Entities.BookingService;
 using Microsoft.EntityFrameworkCore;
+using BookingServiceEntity = ABP_test_task.Entities.BookingService;
 
 namespace ABP_test_task.Services.Booking;
 
@@ -22,8 +21,8 @@ public class BookingService(AppDbContext context, IBookingTimePolicy bookingTime
 		var endDateTime = startDateTime.AddHours(request.DurationHours);
 
 		var hasConflict = await context.Bookings
-			.Where(b => b.HallId == request.HallId && 
-					b.StartTime < endDateTime && 
+			.Where(b => b.HallId == request.HallId &&
+					b.StartTime < endDateTime &&
 					b.EndTime > startDateTime)
 			.AnyAsync(cancellationToken);
 

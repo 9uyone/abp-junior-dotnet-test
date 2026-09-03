@@ -2,8 +2,8 @@
 using ABP_test_task.DTOs.Halls;
 using ABP_test_task.Entities;
 using ABP_test_task.Services.Booking;
-using HallServiceEntity = ABP_test_task.Entities.HallService;
 using Microsoft.EntityFrameworkCore;
+using HallServiceEntity = ABP_test_task.Entities.HallService;
 
 namespace ABP_test_task.Services.Hall;
 
@@ -96,7 +96,7 @@ public class HallService(AppDbContext context, IBookingTimePolicy bookingTimePol
 		if (await context.Bookings
 			.AsNoTracking()
 			.AnyAsync(booking => booking.HallId == id && booking.EndTime > now, cancellationToken))
-				throw new InvalidOperationException("Hall cannot be deleted while active or future bookings exist.");
+			throw new InvalidOperationException("Hall cannot be deleted while active or future bookings exist.");
 
 		context.Halls.Remove(hall);
 		await context.SaveChangesAsync(cancellationToken);

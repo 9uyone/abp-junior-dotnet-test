@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace ABP_test_task.Entities;
+﻿namespace ABP_test_task.Entities;
 
 public class Booking: BaseEntity {
 	public int HallId { get; set; }
