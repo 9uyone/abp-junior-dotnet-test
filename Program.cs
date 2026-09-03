@@ -28,8 +28,8 @@ builder.Services
 	.AddSingleton<IRentalPriceCalculator, RentalPriceCalculator>()
 	.AddSingleton<IBookingTimePolicy, BookingTimePolicy>()
 	.AddScoped<IHallService, HallService>()
-	.AddScoped<IBookingService, BookingService>();
-//.AddScoped<IReportsService, ReportsService>();
+	.AddScoped<IBookingService, BookingService>()
+	.AddScoped<IAnalyticsService, AnalyticsService>();
 
 builder.Services
 	.AddScoped<IValidator<CreateHallRequest>, CreateHallRequestValidator>()
@@ -60,5 +60,7 @@ app.MapGroup("/api/halls")
 app.MapGroup("/api/bookings")
    .MapBookingEndpoints()
    .WithTags("Bookings");
+
+app.MapReportsEndpoints();
 
 app.Run();

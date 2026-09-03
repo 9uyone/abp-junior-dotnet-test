@@ -20,10 +20,4 @@ public class BookingTimePolicy : IBookingTimePolicy {
 	public DateTime ToUtcDateTime(DateOnly date, TimeOnly time) {
 		return DateTime.SpecifyKind(date.ToDateTime(time), DateTimeKind.Utc);
 	}
-
-	public bool HasOverlap(DateTime leftStart, int leftDurationHours, DateTime rightStart, int rightDurationHours) {
-		var leftEnd = leftStart.AddHours(leftDurationHours);
-		var rightEnd = rightStart.AddHours(rightDurationHours);
-		return leftStart < rightEnd && rightStart < leftEnd;
-	}
 }

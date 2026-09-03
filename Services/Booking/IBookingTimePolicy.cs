@@ -6,5 +6,4 @@ public interface IBookingTimePolicy {
 
 	void EnsureWithinWorkingHours(DateOnly date, TimeOnly startTime, int durationHours);
 	DateTime ToUtcDateTime(DateOnly date, TimeOnly time);
-	bool HasOverlap(DateTime leftStart, int leftDurationHours, DateTime rightStart, int rightDurationHours);
 }
