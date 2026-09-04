@@ -13,8 +13,7 @@ public class RentalPriceCalculatorTests {
 		int startHour,
 		int durationHours,
 		decimal basePrice,
-		decimal expectedTotal)
-	{
+		decimal expectedTotal) {
 		var startTime = new DateTime(2026, 9, 1, startHour, 0, 0);
 		var result = _calculator.CalculateTotal(basePrice, startTime, durationHours, []);
 		result.Should().Be(expectedTotal);
@@ -22,13 +21,12 @@ public class RentalPriceCalculatorTests {
 
 	[Theory]
 	[InlineData(6, 3, 1000, 2700)] // 06:00 - 09:00 (6, 7, 8) -> 3 * 1000 * 0.9 = 2700
-	[InlineData(8, 2, 2000, 3600)] // 08:00 - 10:00 (8, 9) -> 2 * 2000 * 0.9 = 3600
+	[InlineData(7, 2, 2000, 3600)] // 07:00 - 09:00 (7, 8)    -> 2 * 2000 * 0.9 = 3600
 	public void CalculateTotal_MorningHours_AppliesTenPercentDiscount(
 		int startHour,
 		int durationHours,
 		decimal basePrice,
-		decimal expectedTotal)
-	{
+		decimal expectedTotal) {
 		var startTime = new DateTime(2026, 9, 1, startHour, 0, 0);
 		var result = _calculator.CalculateTotal(basePrice, startTime, durationHours, []);
 		result.Should().Be(expectedTotal);
@@ -36,27 +34,27 @@ public class RentalPriceCalculatorTests {
 
 	[Theory]
 	[InlineData(12, 2, 2000, 4600)] // 12:00 - 14:00 (12, 13) -> 2 * 2000 * 1.15 = 4600
-	[InlineData(13, 2, 1000, 2300)] // 13:00 - 15:00 (13, 14) -> 2 * 1000 * 1.15 = 2300
+	[InlineData(12, 1, 1000, 1150)] // 12:00 - 13:00 (12)     -> 1 * 1000 * 1.15 = 1150
+	[InlineData(13, 1, 1000, 1150)] // 13:00 - 14:00 (13)     -> 1 * 1000 * 1.15 = 1150
 	public void CalculateTotal_PeakHours_AppliesFifteenPercentMarkup(
 		int startHour,
 		int durationHours,
 		decimal basePrice,
-		decimal expectedTotal)
-	{
+		decimal expectedTotal) {
 		var startTime = new DateTime(2026, 9, 1, startHour, 0, 0);
 		var result = _calculator.CalculateTotal(basePrice, startTime, durationHours, []);
 		result.Should().Be(expectedTotal);
 	}
 
 	[Theory]
+	[InlineData(18, 2, 2000, 3200)] // 18:00 - 20:00 (18, 19) -> 2 * 2000 * 0.8 = 3200 (межа 18:00)
 	[InlineData(19, 2, 2000, 3200)] // 19:00 - 21:00 (19, 20) -> 2 * 2000 * 0.8 = 3200
 	[InlineData(21, 2, 1000, 1600)] // 21:00 - 23:00 (21, 22) -> 2 * 1000 * 0.8 = 1600
 	public void CalculateTotal_EveningHours_AppliesTwentyPercentDiscount(
 		int startHour,
 		int durationHours,
 		decimal basePrice,
-		decimal expectedTotal)
-	{
+		decimal expectedTotal) {
 		var startTime = new DateTime(2026, 9, 1, startHour, 0, 0);
 		var result = _calculator.CalculateTotal(basePrice, startTime, durationHours, []);
 		result.Should().Be(expectedTotal);
@@ -68,18 +66,18 @@ public class RentalPriceCalculatorTests {
 		// 11:00 - 12:00 -> 1000 * 1.0  = 1000 (стандарт)
 		// 12:00 - 13:00 -> 1000 * 1.15 = 1150 (пік)
 		// 13:00 - 14:00 -> 1000 * 1.15 = 1150 (пік)
-		// 14:00 - 15:00 -> 1000 * 1.15 = 1150 (пік за поточною умовою <= 14)
+		// 14:00 - 15:00 -> 1000 * 1.0  = 1000 (стандарт)
 		// 15:00 - 16:00 -> 1000 * 1.0  = 1000 (стандарт)
-		// Разом оренда залу: 5450
+		// Разом оренда залу: 5300
 		// Послуги: Проєктор (500) + Звук (700) + Wi-Fi (300) = 1500
-		// Очікуваний тотал: 6950
+		// Очікуваний тотал: 6800
 		var startTime = new DateTime(2026, 9, 1, 11, 0, 0);
 		const int durationHours = 5;
 		const decimal basePricePerHour = 1000m;
 		var servicePrices = new decimal[] { 500m, 700m, 300m };
 
 		var result = _calculator.CalculateTotal(basePricePerHour, startTime, durationHours, servicePrices);
-		result.Should().Be(6950m);
+		result.Should().Be(6800m);
 	}
 
 	[Fact]

@@ -30,6 +30,7 @@ public class BookingService(AppDbContext context, IBookingTimePolicy bookingTime
 			throw new InvalidOperationException("The requested time slot has a conflict with an existing booking.");
 
 		var hallServices = await context.HallServices
+			.Include(hs => hs.Service)
 			.Where(hs => hs.HallId == request.HallId && request.ServiceIds.Contains(hs.ServiceId))
 			.ToListAsync(cancellationToken);
 

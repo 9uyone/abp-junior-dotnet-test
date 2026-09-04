@@ -18,7 +18,18 @@ builder.Services
 	.AddProblemDetails()
 	.AddExceptionHandler<GlobalExceptionHandler>()
 	.AddEndpointsApiExplorer()
-	.AddSwaggerGen()
+	.AddSwaggerGen(c => {
+		c.MapType<TimeOnly>(() => new Microsoft.OpenApi.OpenApiSchema {
+			Type = Microsoft.OpenApi.JsonSchemaType.String,
+			Format = "time",
+			Example = "14:00"
+		});
+		c.MapType<DateOnly>(() => new Microsoft.OpenApi.OpenApiSchema {
+			Type = Microsoft.OpenApi.JsonSchemaType.String,
+			Format = "date",
+			Example = "2026-09-04"
+		});
+	})
 	.AddDbContext<AppDbContext>(options => {
 		options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 		options.UseSnakeCaseNamingConvention();

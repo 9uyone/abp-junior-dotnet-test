@@ -30,12 +30,15 @@ public class AnalyticsService(AppDbContext context, IBookingTimePolicy bookingTi
 	}
 
 	public async Task<OccupancyReportDto> GetOccupancyReportAsync(DateOnly from, DateOnly to, CancellationToken cancellationToken) {
-		// Convert DateOnly range to DateTime range (inclusive start, exclusive end)
+		if (to < from)
+			throw new ArgumentException("'to' date must be greater than or equal to 'from' date.");
+
 		var start = from.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
 		var endExclusive = to.AddDays(1).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
 
-		int hoursPerDay = (bookingTimePolicy.WorkingDayEnd - bookingTimePolicy.WorkingDayStart).Days; // 06:00 to 23:00
-		var days = (endExclusive - start).Days; // already full days
+		// .Hours або (int).TotalHours, а не .Days!
+		int hoursPerDay = (int)(bookingTimePolicy.WorkingDayEnd - bookingTimePolicy.WorkingDayStart).TotalHours;
+		var days = (endExclusive - start).Days;
 		var totalPossibleHours = hoursPerDay * days;
 
 		var hallOccupancy = await context.Halls
@@ -54,7 +57,9 @@ public class AnalyticsService(AppDbContext context, IBookingTimePolicy bookingTi
 				h.Id,
 				h.Name,
 				h.BookedHours,
-				h.BookedHours > 0 ? (h.BookedHours / (double)totalPossibleHours) * 100 : 0
+				totalPossibleHours > 0
+					? Math.Round((h.BookedHours / (double)totalPossibleHours) * 100, 2)
+					: 0
 			))
 			.OrderByDescending(h => h.BookedHours)
 			.ToList();

@@ -13,9 +13,9 @@ public class RentalPriceCalculator : IRentalPriceCalculator {
 	}
 
 	private decimal GetMultiplierForHour(int hour) => hour switch {
-		>= 6  and <= 9  => 0.9m,	// 10% знижки
-		>= 12 and <= 14 => 1.15m,	// 15% націнки
-		>= 9  and <=18  => 1m,		// без змін
-		_				=> 0.8m		// вечірні, 20% знижки
+		>= 6 and < 9 => 0.9m,   // 10% знижки
+		>= 12 and < 14 => 1.15m,  // 15% націнки
+		>= 18 and < 23 => 0.8m,   // 20% знижки
+		_ => 1.0m    // стандартний тариф для всіх інших годин
 	};
 }
