@@ -12,9 +12,10 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
 			ValidationException validationException => (
 				StatusCodes.Status400BadRequest,
 				"Validation failed",
-				validationException.Errors
+				/*validationException.Errors
 					.GroupBy(error => error.PropertyName)
-					.ToDictionary(group => group.Key, group => group.Select(error => error.ErrorMessage).ToArray())
+					.ToDictionary(group => group.Key, group => group.Select(error => error.ErrorMessage).ToArray())*/
+				string.Join("\n", validationException.Errors.Select(error => $"{error.ErrorMessage}"))
 			),
 			BadHttpRequestException => (StatusCodes.Status400BadRequest, "Bad request to API", null),
 			UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, "Unauthorized access to API", null),

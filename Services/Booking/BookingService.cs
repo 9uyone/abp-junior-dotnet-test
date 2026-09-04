@@ -23,7 +23,7 @@ public class BookingService(AppDbContext context, IBookingTimePolicy bookingTime
 		var hasConflict = await context.Bookings
 			.Where(b => b.HallId == request.HallId &&
 					b.StartTime < endDateTime &&
-					b.EndTime > startDateTime)
+					b.StartTime.AddHours(b.DurationHours) > startDateTime)
 			.AnyAsync(cancellationToken);
 
 		if (hasConflict)

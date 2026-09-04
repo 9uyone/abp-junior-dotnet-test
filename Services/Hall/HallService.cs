@@ -95,7 +95,7 @@ public class HallService(AppDbContext context, IBookingTimePolicy bookingTimePol
 
 		if (await context.Bookings
 			.AsNoTracking()
-			.AnyAsync(booking => booking.HallId == id && booking.EndTime > now, cancellationToken))
+			.AnyAsync(booking => booking.HallId == id && booking.StartTime.AddHours(booking.DurationHours) > now, cancellationToken))
 			throw new InvalidOperationException("Hall cannot be deleted while active or future bookings exist.");
 
 		context.Halls.Remove(hall);
@@ -111,7 +111,7 @@ public class HallService(AppDbContext context, IBookingTimePolicy bookingTimePol
 
 		return await context.Halls
 			.AsNoTracking()
-			.Where(hall => !hall.Bookings.Any(booking => booking.StartTime < end && booking.EndTime > start))
+			.Where(hall => !hall.Bookings.Any(booking => booking.StartTime < end && booking.StartTime.AddHours(booking.DurationHours) > start))
 			.Select(hall => new AvailableHallDto(
 				hall.Id,
 				hall.Name,

@@ -17,8 +17,6 @@ internal class BookingConfiguration : IEntityTypeConfiguration<Booking> {
 		builder.Property(b => b.DurationHours)
 			.IsRequired();
 
-		builder.Ignore(b => b.EndTime);
-
 		builder.Property(b => b.TotalPrice)
 			.HasColumnType("decimal(10,2)")
 			.IsRequired();

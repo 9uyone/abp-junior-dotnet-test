@@ -6,7 +6,6 @@ public class Booking: BaseEntity {
 
 	public DateTime StartTime { get; set; }
 	public int DurationHours { get; set; }
-	public DateTime EndTime => StartTime.AddHours(DurationHours);
 
 	public decimal TotalPrice { get; set; }
 
