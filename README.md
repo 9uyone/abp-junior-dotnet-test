@@ -1,7 +1,7 @@
 # Conference hall booking API
 
-![.NET 8](https://img.shields.io/badge/.NET-8.0-512BD4?style=flat-square&logo=dotnet)
-![C#](https://img.shields.io/badge/C%23-12-239120?style=flat-square&logo=csharp)
+![.NET 10](https://img.shields.io/badge/.NET-10.0-512BD4?style=flat-square&logo=dotnet)
+![C#](https://img.shields.io/badge/C%23-14-239120?style=flat-square&logo=csharp)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=flat-square&logo=postgresql)
 ![Tests](https://img.shields.io/badge/Tests-xUnit%20%7C%20FluentAssertions-blue?style=flat-square)
 
@@ -28,7 +28,7 @@ REST API для бронювання конференц-залів із дина
 
 ---
 
-## Розрахунок вартості (Pricing Engine)
+## Розрахунок вартості
 
 Погодинний підрахунок вартості залежно від часових інтервалів:
 
@@ -43,7 +43,7 @@ REST API для бронювання конференц-залів із дина
 
 ---
 
-## Початкові тестові дані (Seed Data)
+## Початкові тестові дані (seed data)
 
 Дані автоматично наповнюються сідером при старті програми:
 
@@ -74,7 +74,7 @@ REST API для бронювання конференц-залів із дина
    (Міграції та сідер виконаються автоматично).
 
 3. Відкрити Swagger UI:
-   http://localhost:<port>/swagger
+   https://localhost:7267/swagger/index.html
 
 4. Запустити тести:
    dotnet test
