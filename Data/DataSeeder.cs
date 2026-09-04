@@ -26,8 +26,10 @@ public static class DataSeeder {
 
 		var hallServices = new List<HallService> {
 			new() { Hall = halls[0], Service = services[0], Price = 500m },
-			new() { Hall = halls[1], Service = services[2], Price = 300m },
-			new() { Hall = halls[2], Service = services[1], Price = 700m }
+			new() { Hall = halls[0], Service = services[1], Price = 300m },
+			new() { Hall = halls[0], Service = services[2], Price = 700m },
+			new() { Hall = halls[1], Service = services[1], Price = 300m },
+			new() { Hall = halls[2], Service = services[2], Price = 700m },
 		};
 
 		await context.Halls.AddRangeAsync(halls);
