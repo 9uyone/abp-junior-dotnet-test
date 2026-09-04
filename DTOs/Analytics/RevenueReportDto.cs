@@ -8,8 +8,8 @@ public record HallRevenueDto(
 );
 
 public record RevenueReportDto(
-	DateTime From,
-	DateTime To,
+	DateOnly From,
+	DateOnly To,
 	decimal TotalRevenue,
 	IReadOnlyList<HallRevenueDto> Halls
 );

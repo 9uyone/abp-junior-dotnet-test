@@ -8,8 +8,8 @@ public record HallOccupancyDto(
 );
 
 public record OccupancyReportDto(
-	DateTime From,
-	DateTime To,
+	DateOnly From,
+	DateOnly To,
 	int TotalPossibleHoursPerHall,
 	IReadOnlyList<HallOccupancyDto> Halls,
 	string? MostPopularHallName

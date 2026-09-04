@@ -23,7 +23,7 @@ public static class ReportsEndpoints {
 		return app;
 	}
 
-	private static async Task<IResult> GetRevenueAsync(DateTime from, DateTime to, IAnalyticsService service, CancellationToken ct) {
+	private static async Task<IResult> GetRevenueAsync(DateOnly from, DateOnly to, IAnalyticsService service, CancellationToken ct) {
 		if (from > to)
 			return Results.BadRequest("'from' date must be less than or equal to 'to' date.");
 
@@ -31,7 +31,7 @@ public static class ReportsEndpoints {
 		return TypedResults.Ok(report);
 	}
 
-	private static async Task<IResult> GetOccupancyAsync(DateTime from, DateTime to, IAnalyticsService service, CancellationToken ct) {
+	private static async Task<IResult> GetOccupancyAsync(DateOnly from, DateOnly to, IAnalyticsService service, CancellationToken ct) {
 		if (from > to)
 			return Results.BadRequest("'from' date must be less than or equal to 'to' date.");
 
