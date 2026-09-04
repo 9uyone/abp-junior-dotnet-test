@@ -1,23 +1,21 @@
 namespace ABP_test_task.Services.Booking;
 
 public class BookingTimePolicy : IBookingTimePolicy {
-	public TimeOnly WorkingDayStart { get; } = new(9, 0);
+	public TimeOnly WorkingDayStart { get; } = new(6, 0); // або 9, 0 згідно з ТЗ
 	public TimeOnly WorkingDayEnd { get; } = new(23, 0);
 
 	public void EnsureWithinWorkingHours(DateOnly date, TimeOnly startTime, int durationHours) {
 		if (durationHours <= 0)
 			throw new ArgumentException("Duration must be greater than zero.");
 
-		var start = ToUtcDateTime(date, startTime);
-		var end = start.AddHours(durationHours);
-		var workingStart = ToUtcDateTime(date, WorkingDayStart);
-		var workingEnd = ToUtcDateTime(date, WorkingDayEnd);
+		// Перевіряємо вихід за межі доби або закінчення після закриття
+		// Якщо startTime + durationHours перетинає північ, AddHours поверне менший час
+		var endTime = startTime.AddHours(durationHours, out int wrappedDays);
 
-		if (start < workingStart || end > workingEnd)
-			throw new ArgumentException("Requested time must be within working hours from 09:00 to 23:00.");
+		if (wrappedDays > 0 || startTime < WorkingDayStart || endTime > WorkingDayEnd)
+			throw new ArgumentException($"Requested time must be within working hours from {WorkingDayStart:HH\\:mm} to {WorkingDayEnd:HH\\:mm}.");
 	}
 
-	public DateTime ToUtcDateTime(DateOnly date, TimeOnly time) {
-		return DateTime.SpecifyKind(date.ToDateTime(time), DateTimeKind.Utc);
-	}
+	public DateTime ToUtcDateTime(DateOnly date, TimeOnly time) =>
+		DateTime.SpecifyKind(date.ToDateTime(time), DateTimeKind.Utc);
 }
